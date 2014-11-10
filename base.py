@@ -69,10 +69,9 @@ def updateFriend(usernamei, passwordi, friendi):
 
 def getIntrest(usernamei):
     if validateFriend(usernamei):
-        cres = db.usertable.find({'username': usernamei,'password':passwordi})
-        res = [r for r in cres]  
-        if len(res)>0:
-            return True
-        return False
+        ret = []
+        cres = db.usertable.find({'username': usernamei})
+        res = [r['intrests'] for r in cres]
+        
     return False
     
