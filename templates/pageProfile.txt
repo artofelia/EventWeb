@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h1><a href="”#”">Profile</a></h1>
+<ul class="nav nav-list">
+    <li class="nav-header">Intrests</li>
+	{% for intrest in intrests %}
+    <li><a href="#">intrest</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}
