@@ -1,7 +1,7 @@
 from flask import Flask, session, redirect, url_for, escape, request, render_template, flash
 import os
 import base
-#import eventSearch
+import eventSearch
 
 app = Flask(__name__)
 corner = """
@@ -92,8 +92,8 @@ def findEvents():
             form_keys = request.form.keys()
             
             if ('where' in form_keys) and ('when' in form_keys):
-                intrests = base.getAggIntrests(user)
-                jsret = []#eventSearch.findEvents(intrests)
+                interests = base.getAggInterests(user)
+                jsret = eventSearch.findEvents(interests, None, None)
                 events = []
                 for key in jsret.keys():
                     evobj = jsret[key]
@@ -124,15 +124,15 @@ def profile():
         if request.method == 'POST':
             form_keys = request.form.keys()
             
-            if 'newIntrest' in form_keys:
+            if 'newInterest' in form_keys:
                 print 'got add command'
-                newIntrest = request.form['newIntrest']
-                base.updateIntrest(user, newIntrest)
+                newInterest = request.form['newInterest']
+                base.updateInterest(user, newInterest)
                 
-            if 'cintrest' in form_keys:
+            if 'cinterest' in form_keys:
                 print 'got remove command'
-                rmIntrest = request.form['cintrest']
-                base.removeIntrest(user, rmIntrest)
+                rmInterest = request.form['cinterest']
+                base.removeInterest(user, rmInterest)
                
             ###                   
             if 'newFriend' in form_keys:
@@ -148,20 +148,20 @@ def profile():
                 rmFriend = request.form['cfriend']
                 res = base.removeFriend(user, rmFriend)
                 
-            intrests = base.getIntrests(user)[0]
+            interests = base.getInterests(user)[0]
             friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",
                                         corner = escape(session['username']),
                                         error = error,
-                                        intrests = intrests,
+                                        interests = interests,
                                         friends = friends)   
         else:
-            intrests = base.getIntrests(user)[0]
+            interests = base.getInterests(user)[0]
             friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",
                                         corner = escape(session['username']),
                                         error = error,
-                                        intrests = intrests,
+                                        interests = interests,
                                         friends = friends)
     else:
         return redirect(url_for('login'))

@@ -1,9 +1,16 @@
 import urllib2, json
 
-app_key = "FV8xFzGKxmWvqtgC"
-url="http://api.eventful.com/json/events/search?"
+def findEvents(interest, time, place):
+    url="http://api.eventful.com/json/events/search?"
+    app_key = "FV8xFzGKxmWvqtgC"
+    url = url + "q=" + interest.replace(" ", "%20") + "&t=" + time + "&l=" + place + "&app_key=" + app_key
+    request = urllib2.urlopen(url)
+    result = request.read()
+    d = json.loads(result)
+    return d
 
-queryWhat = "Dumb%20and%20Dumber%20To"
+'''
+queryWhat = "Dumb and Dumber To"
 queryWhen = "Today"
 queryWhere = None#"NYC"
 andNeeded = True
@@ -17,12 +24,12 @@ if queryWhen != None:
     url = url + "&t=" + queryWhen
 if queryWhere != None:
     url = url + "&l=" + queryWhere
-
-url = url + "&app_key=" + app_key
-request = urllib2.urlopen(url)
-result = request.read()
-d = json.loads(result)
-print d
-rlist = d['responseData']['results']
+'''
+#url = url + "&app_key=" + app_key
+#request = urllib2.urlopen(url)
+#result = request.read()
+#d = json.loads(result)
+#print d
+#rlist = d['responseData']['results']
 #for r in rlist:
     #print r
