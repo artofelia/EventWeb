@@ -94,20 +94,49 @@ def profile():
     error = None
     if 'username' in session:
         user = escape(session['username'])
+        
         if request.method == 'POST':
-            newIntrest = request.form['newIntrest']
-            base.updateIntrest(user, newIntrest)
+            form_keys = request.form.keys()
+            
+            if 'newIntrest' in form_keys:
+                print 'got add command'
+                newIntrest = request.form['newIntrest']
+                base.updateIntrest(user, newIntrest)
+                
+            if 'cintrest' in form_keys:
+                print 'got remove command'
+                rmIntrest = request.form['cintrest']
+                base.removeIntrest(user, rmIntrest)
+               
+            ###                   
+            if 'newFriend' in form_keys:
+                print 'got add command'
+                newFriend = request.form['newFriend']
+                if base.validateFriend(newFriend):
+                    base.updateFriend(user, newFriend)
+                else:
+                    flash('Username Not Found!!!')
+                    
+            if 'cfriend' in form_keys:
+                print 'got remove command'
+                rmFriend = request.form['cfriend']
+                res = base.removeFriend(user, rmFriend)
+                
             intrests = base.getIntrests(user)[0]
+            friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",
-                                    corner = escape(session['username']),
-                                    error = error,
-                                    intrests = intrests)          
+                                        corner = escape(session['username']),
+                                        error = error,
+                                        intrests = intrests,
+                                        friends = friends)   
         else:
             intrests = base.getIntrests(user)[0]
+            friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",
-                                corner = escape(session['username']),
-                                error = error,
-                                intrests = intrests)
+                                        corner = escape(session['username']),
+                                        error = error,
+                                        intrests = intrests,
+                                        friends = friends)
     else:
         return redirect(url_for('login'))
 
