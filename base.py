@@ -81,3 +81,27 @@ def getFriends(usernamei):
         return res
     return False
     
+def removeIntrest(usernamei, intresti):
+    if validateFriend(usernamei):
+        db.usertable.update({'username': usernamei}, {"$pull": {'intrests':intresti}})
+        return True
+    return False
+	
+def removeFriend(usernamei, friendi):
+    if validateFriend(usernamei):
+        db.usertable.update({'username': usernamei}, {"$pull": {'friends':friendi}})
+        return True
+    return False
+    
+def getAggIntrests(usernamei):
+    if validateFriend(usernamei):
+        myint = getIntrests(usernamei)[0]
+        allint = myint
+        
+        frs = getFriends(usernamei)[0]
+        for fr in frs:
+            nint = getIntrests(fr)[0]
+            allint = allint+nint
+        return allint
+        
+    return False

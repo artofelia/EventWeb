@@ -1,6 +1,7 @@
 from flask import Flask, session, redirect, url_for, escape, request, render_template, flash
 import os
 import base
+#import eventSearch
 
 app = Flask(__name__)
 corner = """
@@ -83,31 +84,85 @@ def about():
 
 @app.route('/findEvents', methods=['GET', 'POST'])
 def findEvents():
+    error = None
     if 'username' in session:
-        return render_template  ("pageEvent.html",
-                                 corner = escape(session['username']))
+        user = escape(session['username'])
+        
+        if request.method == 'POST':
+            form_keys = request.form.keys()
+            
+            if ('where' in form_keys) and ('when' in form_keys):
+                intrests = base.getAggIntrests(user)
+                jsret = []#eventSearch.findEvents(intrests)
+                events = []
+                for key in jsret.keys():
+                    evobj = jsret[key]
+                    ev[0] = evobj['title']
+                    ev[1] = evobj['url']
+                    ev[2] = evobj['where']
+                    ev[3] = evobj['when']
+                    events.add(ev)
+                    
+                return render_template ("pageEvent.html",
+                                            corner = escape(session['username']),
+                                            error = error,
+                                            events = events)   
+        else:
+            return render_template ("pageEvent.html",
+                                            corner = escape(session['username']),
+                                            error = error,
+                                            events = [])   
     else:
-        return render_template ("error.html")
+        return redirect(url_for('login'))
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     error = None
     if 'username' in session:
         user = escape(session['username'])
+        
         if request.method == 'POST':
-            newIntrest = request.form['newIntrest']
-            base.updateIntrest(user, newIntrest)
+            form_keys = request.form.keys()
+            
+            if 'newIntrest' in form_keys:
+                print 'got add command'
+                newIntrest = request.form['newIntrest']
+                base.updateIntrest(user, newIntrest)
+                
+            if 'cintrest' in form_keys:
+                print 'got remove command'
+                rmIntrest = request.form['cintrest']
+                base.removeIntrest(user, rmIntrest)
+               
+            ###                   
+            if 'newFriend' in form_keys:
+                print 'got add command'
+                newFriend = request.form['newFriend']
+                if base.validateFriend(newFriend):
+                    base.updateFriend(user, newFriend)
+                else:
+                    flash('Username Not Found!!!')
+                    
+            if 'cfriend' in form_keys:
+                print 'got remove command'
+                rmFriend = request.form['cfriend']
+                res = base.removeFriend(user, rmFriend)
+                
             intrests = base.getIntrests(user)[0]
+            friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",
-                                    corner = escape(session['username']),
-                                    error = error,
-                                    intrests = intrests)          
+                                        corner = escape(session['username']),
+                                        error = error,
+                                        intrests = intrests,
+                                        friends = friends)   
         else:
             intrests = base.getIntrests(user)[0]
+            friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",
-                                corner = escape(session['username']),
-                                error = error,
-                                intrests = intrests)
+                                        corner = escape(session['username']),
+                                        error = error,
+                                        intrests = intrests,
+                                        friends = friends)
     else:
         return redirect(url_for('login'))
 
