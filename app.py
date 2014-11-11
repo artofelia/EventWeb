@@ -148,6 +148,7 @@ def profile():
                 rmFriend = request.form['cfriend']
                 res = base.removeFriend(user, rmFriend)
                 
+            print base.getInterests(user)
             interests = base.getInterests(user)[0]
             friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",
@@ -156,6 +157,7 @@ def profile():
                                         interests = interests,
                                         friends = friends)   
         else:
+            print base.getInterests(user)
             interests = base.getInterests(user)[0]
             friends = base.getFriends(user)[0]
             return render_template ("pageProfile.html",

@@ -8,7 +8,7 @@ db = conn['1247']
 
 def restart():
     db.usertable.drop()
-    tdic = {'username': 'testing', 'password':'testing', 'intrests':['testing'],
+    tdic = {'username': 'testing', 'password':'testing', 'interests':['testing'],
             'friends':['testing']}
     db.usertable.insert(tdic)   
 
@@ -40,7 +40,7 @@ def addUser(usernamei, passwordi):
     print res
     if len(res)>0:
         return False
-    nu = {'username': usernamei, 'password':passwordi, 'intrests':[],
+    nu = {'username': usernamei, 'password':passwordi, 'interests':[],
           'friends':[]}
     db.usertable.save(nu)
     return True
@@ -51,10 +51,10 @@ def updateUser(usernamei, passwordi, passwordn):
         return True
     return False
 
-def updateIntrest(usernamei, intresti):
+def updateInterest(usernamei, interesti):
     if validateFriend(usernamei):
         db.usertable.update({'username':usernamei},
-							{"$addToSet": {'intrests': intresti}})
+							{"$addToSet": {'interests': interesti}})
         return True
     return False
 
@@ -67,10 +67,10 @@ def updateFriend(usernamei, friendi):
         return False
     return False
 
-def getIntrests(usernamei):
+def getInterests(usernamei):
     if validateFriend(usernamei):
         cres = db.usertable.find({'username': usernamei})
-        res = [r['intrests'] for r in cres]
+        res = [r['interests'] for r in cres]
         return res
     return False
 	
@@ -81,9 +81,9 @@ def getFriends(usernamei):
         return res
     return False
     
-def removeIntrest(usernamei, intresti):
+def removeInterest(usernamei, interesti):
     if validateFriend(usernamei):
-        db.usertable.update({'username': usernamei}, {"$pull": {'intrests':intresti}})
+        db.usertable.update({'username': usernamei}, {"$pull": {'interests':interesti}})
         return True
     return False
 	
@@ -93,14 +93,14 @@ def removeFriend(usernamei, friendi):
         return True
     return False
     
-def getAggIntrests(usernamei):
+def getAgginterests(usernamei):
     if validateFriend(usernamei):
-        myint = getIntrests(usernamei)[0]
+        myint = getinterests(usernamei)[0]
         allint = myint
         
         frs = getFriends(usernamei)[0]
         for fr in frs:
-            nint = getIntrests(fr)[0]
+            nint = getinterests(fr)[0]
             allint = allint+nint
         return allint
         
