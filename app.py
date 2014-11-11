@@ -1,5 +1,5 @@
 from flask import Flask, session, redirect, url_for, escape, request, render_template, flash
-
+import os
 import base
 
 app = Flask(__name__)
@@ -81,7 +81,7 @@ def about():
         return render_template ("page1.html",
                                  corner = None)
 
-@app.route('/findEvents')
+@app.route('/findEvents', methods=['GET', 'POST'])
 def findEvents():
     if 'username' in session:
         return render_template  ("pageEvent.html",
@@ -89,21 +89,27 @@ def findEvents():
     else:
         return render_template ("error.html")
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    error = None
     if 'username' in session:
-        return render_template ("pageProfile.html",
-                                corner = escape(session['username']))
+        user = escape(session['username'])
+        if request.method == 'POST':
+            newIntrest = request.form['newIntrest']
+            base.updateIntrest(user, newIntrest)
+            intrests = base.getIntrests(user)[0]
+            return render_template ("pageProfile.html",
+                                    corner = escape(session['username']),
+                                    error = error,
+                                    intrests = intrests)          
+        else:
+            intrests = base.getIntrests(user)[0]
+            return render_template ("pageProfile.html",
+                                corner = escape(session['username']),
+                                error = error,
+                                intrests = intrests)
     else:
-        return render_template("error.html")
-
-@app.route('/illegal')
-def illegal():
-    if 'username' in session:
-        return render_template  ("page4.html",
-                                 corner = escape(session['username']))
-    else:
-        return render_template ("error.html")
+        return redirect(url_for('login'))
 
 @app.route('/reset')
 def reset():
@@ -112,7 +118,7 @@ def reset():
 
 # set the secret key.  keep this really secret:
 # this is fake very fake oooh
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.secret_key = os.urandom(24)
 
 if __name__ == "__main__":
     app.debug = True

@@ -40,7 +40,7 @@ def addUser(usernamei, passwordi):
     print res
     if len(res)>0:
         return False
-    nu = {'username': usernamei, 'password':passwordi, 'intrests':[]
+    nu = {'username': usernamei, 'password':passwordi, 'intrests':[],
           'friends':[]}
     db.usertable.save(nu)
     return True
@@ -51,27 +51,33 @@ def updateUser(usernamei, passwordi, passwordn):
         return True
     return False
 
-def updateIntest(usernamei, passwordi, intresti):
-    if validate(usernamei, passwordi):
-        db.usertable.update({'username':usernamei, 'password':passwordi},
-                            {$addToSet: {'intrests': intresti}})
+def updateIntrest(usernamei, intresti):
+    if validateFriend(usernamei):
+        db.usertable.update({'username':usernamei},
+							{"$addToSet": {'intrests': intresti}})
         return True
     return False
 
-def updateFriend(usernamei, passwordi, friendi):
-    if validate(usernamei, passwordi):
+def updateFriend(usernamei, friendi):
+    if validateFriend(usernamei):
         if validateFriend(friendi):
-            db.usertable.update({'username':usernamei, 'password':passwordi},
-                            {$addToSet: {'friends': friendi}})
+            db.usertable.update({'username':usernamei},
+                            {"$addToSet": {'friends': friendi}})
             return True
         return False
     return False
 
-def getIntrest(usernamei):
+def getIntrests(usernamei):
     if validateFriend(usernamei):
-        ret = []
         cres = db.usertable.find({'username': usernamei})
         res = [r['intrests'] for r in cres]
-        
+        return res
+    return False
+	
+def getFriends(usernamei):
+    if validateFriend(usernamei):
+        cres = db.usertable.find({'username': usernamei})
+        res = [r['friends'] for r in cres]
+        return res
     return False
     
