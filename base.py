@@ -93,3 +93,15 @@ def removeFriend(usernamei, friendi):
         return True
     return False
     
+def getAggIntrests(usernamei):
+    if validateFriend(usernamei):
+        myint = getIntrests(usernamei)[0]
+        allint = myint
+        
+        frs = getFriends(usernamei)[0]
+        for fr in frs:
+            nint = getIntrests(fr)[0]
+            allint = allint+nint
+        return allint
+        
+    return False
