@@ -109,29 +109,32 @@ def findEvents():
                     events = eventSearch.findEvents(interests, '', where)
                 else:
                     events = eventSearch.findEvents(interests, when, where)
-                eventslist = events[1]
-                eventname = events[0]
-                #q = eventslist[0][0]
-                #q = re.sub(r'\s', 'b', q)                
-                #print q
-                for event in eventslist:
-                    e = event[0]
-                    if e != None: #and e.find(u'<') != -1 and e.find(u'>') != -1:
-                        e = re.sub(r'(\<(/?[^\>]+)\>)', '', e)
-                    event[0] = e
-#                    print "EEEEEEEEEEE" + str(e)
- #                   print "VVVVVVVVVV" + str(event[0])
-                return render_template ("pageEvent.html",
+                if events != None:
+                    eventslist = events[1]
+                    eventname = events[0]
+                    #q = eventslist[0][0]
+                    #q = re.sub(r'\s', 'b', q)                
+                    #print q
+                    for event in eventslist:
+                        e = event[0]
+                        if e != None: #and e.find(u'<') != -1 and e.find(u'>') != -1:
+                            e = re.sub(r'(\<(/?[^\>]+)\>)', '', e)
+                            event[0] = e
+                            #                    print "EEEEEEEEEEE" + str(e)
+                            #                   print "VVVVVVVVVV" + str(event[0])
+                    return render_template ("pageEvent.html",
                                             corner = escape(session['username']),
                                             error = error,
                                             eventslist = eventslist,
                                             eventname = eventname)   
+                else:
+                    return "Please enter some interests into your profile"
         else:
             return render_template ("pageEvent.html",
-                                            corner = escape(session['username']),
-                                            error = error,
-                                            eventslist = [],
-                                            eventname = 'Nothing')   
+                                    corner = escape(session['username']),
+                                    error = error,
+                                    eventslist = [],
+                                    eventname = 'Nothing')   
     else:
         return redirect(url_for('login'))
 
@@ -189,6 +192,11 @@ def profile():
   
     else:
         return redirect(url_for('login'))
+
+@app.route('/allUsers')
+def allUsers():
+    users = base.getAllUsers()
+    return render_template("allUsers.html", users=users)
 
 @app.route('/reset')
 def reset():

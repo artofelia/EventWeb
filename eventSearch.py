@@ -6,7 +6,10 @@ def findEvents(interests, time, place):
     app_key = "FV8xFzGKxmWvqtgC"
     all = []
     random.shuffle(interests)
-    interests = [interests[0]]
+    if len(interests)>0:
+        interests = [interests[0]]
+    else:
+        return None
     for interest in interests:
         #print interest
         url = url + "q=" + interest.replace(" ", "%20") + "&t=" + time + "&l=" + place + "&app_key=" + app_key

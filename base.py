@@ -105,3 +105,10 @@ def getAggInterests(usernamei):
         return allint
         
     return False
+
+def getAllUsers():
+    users = []
+    for user in db.usertable.find({},{'username':1}):
+        users.append(user['username'])
+        print "USER: " + user['username']
+    return users
