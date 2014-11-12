@@ -30,12 +30,12 @@
 </div>
 
 <div class="container">		
-		<h2>Events</h2>
+		<h2>Events: {{eventname}}</h2>
 		<div class = "container">
-		{% for event in events %}
+		{% for event in eventslist %}
 		  <ul class="list-group">
-			<li class="list-group-item">Title: {{event[0]}}</li>
-			<li class="list-group-item">URL: {{event[1]}}</li>        
+			<li class="list-group-item">Description: {{event[0]}}</li>
+			<li class="list-group-item">URL: <a href={{event[1]}}>Click Here!</a></li>        
 			<li class="list-group-item">Where?: {{event[2]}}</li>
 			<li class="list-group-item">When?: {{event[3]}}</li>
 		</ul>

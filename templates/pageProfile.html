@@ -9,61 +9,70 @@
   <p class=error><strong>Error:</strong> {{ error }}</p>
 </div>
 {% endif %}
+<div class="row-offcanvas row-offcanvas-left">
+		<div id="sidebar" class="sidebar-offcanvas">
+            
+			<h3>Trending:</h3>
+			<ul class="nav nav-pills nav-stacked">
+			{% for tr in trending %}
+			<li> {{tr}} </li>
+			{% endfor %}
+            </ul>
+         </div><!--/.well -->
 
-
-
-<div class="container">
-	<h2>Interests</h2>
-		<form role="form" method = "post">
-		<div class="form-group">
-		<div id="channels" class="span12">
-		<div class="btn-group">
-		{% for interest in interests %}
-		  <button class="btn btn-primary" type="submit" name=cinterest value={{interest}}>{{interest}}</button>
-		{% endfor %}
-		</div></div>
-		</div>
-		</form>
-		</br>
-		<div class="col-md-2">
+	<div class="container">
+		<h2>Interests</h2>
 			<form role="form" method = "post">
-			
-			  <div class="form-group">
-			   <label for="newInterest">New Interest:</label>
-			   <input type="text" class="form-control" id="newInterest" placeholder="Enter new interest" name=newInterest>
-			  </div>
-			  
-			  <button type="submit" class="btn btn-default">Add!</button>
+			<div class="form-group">
+			<div id="channels" class="span12">
+			<div class="btn-group">
+			{% for interest in interests %}
+			  <button class="btn btn-primary" type="submit" name=cinterest value={{interest}}>{{interest}}</button>
+			{% endfor %}
+			</div></div>
+			</div>
 			</form>
-		</div>
-</div>
+			</br>
+			<div class="col-md-2">
+				<form role="form" method = "post">
+				
+				  <div class="form-group">
+				   <label for="newInterest">New Interest:</label>
+				   <input type="text" class="form-control" id="newInterest" placeholder="Enter new interest" name=newInterest>
+				  </div>
+				  
+				  <button type="submit" class="btn btn-default">Add!</button>
+				</form>
+			</div>
+	</div>
 
-<div class="container">
-		
-		<h2>Friends</h2>
-		<form role="form" method = "post">
-		<div class="form-group">
-		<div id="channels" class="span12">
-		<div class="btn-group">
-		{% for friend in friends %}
-		  <button class="btn btn-primary" type="submit" name=cfriend value={{friend}}>{{friend}}</button>
-		{% endfor %}
-		</div></div>
-		</div>
-		</form>
-		</br>
-		<div class="col-md-2">
-			<form role="form" method = "post">
+	<div class="container">
 			
-			  <div class="form-group">
-			   <label for="newFriend">New Friend:</label>
-			   <input type="text" class="form-control" id="newFriend" placeholder="Enter new friend username" name=newFriend>
-			  </div>
-			  
-			  <button type="submit" class="btn btn-default">Add!</button>
+			<h2>Friends</h2>
+			<form role="form" method = "post">
+			<div class="form-group">
+			<div id="channels" class="span12">
+			<div class="btn-group">
+			{% for friend in friends %}
+			  <button class="btn btn-primary" type="submit" name=cfriend value={{friend}}>{{friend}}</button>
+			{% endfor %}
+			</div></div>
+			</div>
 			</form>
-		</div>
-	 
+			</br>
+			<div class="col-md-2">
+				<form role="form" method = "post">
+				
+				  <div class="form-group">
+				   <label for="newFriend">New Friend:</label>
+				   <input type="text" class="form-control" id="newFriend" placeholder="Enter new friend username" name=newFriend>
+				  </div>
+				  
+				  <button type="submit" class="btn btn-default">Add!</button>
+				</form>
+			</div>
+		 
+	</div>
 </div>
 	
 	

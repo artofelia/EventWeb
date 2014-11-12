@@ -2,6 +2,9 @@ from flask import Flask, session, redirect, url_for, escape, request, render_tem
 import os
 import base
 import eventSearch
+import random
+import itertools
+from collections import OrderedDict
 
 app = Flask(__name__)
 corner = """
@@ -93,25 +96,22 @@ def findEvents():
             
             if ('where' in form_keys) and ('when' in form_keys):
                 interests = base.getAggInterests(user)
-                jsret = eventSearch.findEvents(interests, None, None)
-                events = []
-                for key in jsret.keys():
-                    evobj = jsret[key]
-                    ev[0] = evobj['title']
-                    ev[1] = evobj['url']
-                    ev[2] = evobj['where']
-                    ev[3] = evobj['when']
-                    events.add(ev)
-                    
+                where = request.form['where']
+                when = request.form['when']
+                events = eventSearch.findEvents(interests, '', '')
+                eventslist = events[1]
+                eventname = events[0]
                 return render_template ("pageEvent.html",
                                             corner = escape(session['username']),
                                             error = error,
-                                            events = events)   
+                                            eventslist = eventslist,
+                                            eventname = eventname)   
         else:
             return render_template ("pageEvent.html",
                                             corner = escape(session['username']),
                                             error = error,
-                                            events = [])   
+                                            eventslist = [],
+                                            eventname = 'Nothing')   
     else:
         return redirect(url_for('login'))
 
@@ -127,7 +127,10 @@ def profile():
             if 'newInterest' in form_keys:
                 print 'got add command'
                 newInterest = request.form['newInterest']
-                base.updateInterest(user, newInterest)
+                if len(newInterest)>0:
+                    base.updateInterest(user, newInterest)
+                else:
+                    flash('Nothing inputed!')
                 
             if 'cinterest' in form_keys:
                 print 'got remove command'
@@ -139,7 +142,10 @@ def profile():
                 print 'got add command'
                 newFriend = request.form['newFriend']
                 if base.validateFriend(newFriend):
-                    base.updateFriend(user, newFriend)
+                    if len(newFriend)>0:
+                        base.updateFriend(user, newFriend)
+                    else:
+                        flash('Nothing inputed!')
                 else:
                     flash('Username Not Found!!!')
                     
@@ -148,23 +154,19 @@ def profile():
                 rmFriend = request.form['cfriend']
                 res = base.removeFriend(user, rmFriend)
                 
-            print base.getInterests(user)
-            interests = base.getInterests(user)[0]
-            friends = base.getFriends(user)[0]
-            return render_template ("pageProfile.html",
+        allint = base.getAggInterests(user)
+        allint = list(OrderedDict.fromkeys(allint))
+        random.shuffle(allint)
+        trending = itertools.islice(allint, 5)
+        interests = base.getInterests(user)[0]
+        friends = base.getFriends(user)[0]
+        return render_template ("pageProfile.html",
                                         corner = escape(session['username']),
                                         error = error,
                                         interests = interests,
-                                        friends = friends)   
-        else:
-            print base.getInterests(user)
-            interests = base.getInterests(user)[0]
-            friends = base.getFriends(user)[0]
-            return render_template ("pageProfile.html",
-                                        corner = escape(session['username']),
-                                        error = error,
-                                        interests = interests,
-                                        friends = friends)
+                                        friends = friends,
+                                        trending = trending)   
+  
     else:
         return redirect(url_for('login'))
 
