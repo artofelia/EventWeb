@@ -79,10 +79,10 @@ def settings():
 @app.route('/about')
 def about():
     if 'username' in session:
-        return render_template  ("page1.html",
+        return render_template  ("index.html",
                                  corner = escape(session['username']))
     else:
-        return render_template ("page1.html",
+        return render_template ("index.html",
                                  corner = None)
 
 @app.route('/findEvents', methods=['GET', 'POST'])
