@@ -4,6 +4,7 @@ import base
 import eventSearch
 import random
 import itertools
+import re
 from collections import OrderedDict
 
 app = Flask(__name__)
@@ -98,9 +99,28 @@ def findEvents():
                 interests = base.getAggInterests(user)
                 where = request.form['where']
                 when = request.form['when']
-                events = eventSearch.findEvents(interests, '', '')
+                #print "Where:" + where + "end"
+                #print where==''
+                if where=="" and when=="":
+                    events = eventSearch.findEvents(interests, '', '')
+                elif where=="":
+                    events = eventSearch.findEvents(interests, when, '')
+                elif when=="":
+                    events = eventSearch.findEvents(interests, '', where)
+                else:
+                    events = eventSearch.findEvents(interests, when, where)
                 eventslist = events[1]
                 eventname = events[0]
+                #q = eventslist[0][0]
+                #q = re.sub(r'\s', 'b', q)                
+                #print q
+                for event in eventslist:
+                    e = event[0]
+                    if e != None: #and e.find(u'<') != -1 and e.find(u'>') != -1:
+                        e = re.sub(r'(\<(/?[^\>]+)\>)', '', e)
+                    event[0] = e
+#                    print "EEEEEEEEEEE" + str(e)
+ #                   print "VVVVVVVVVV" + str(event[0])
                 return render_template ("pageEvent.html",
                                             corner = escape(session['username']),
                                             error = error,

@@ -8,16 +8,17 @@ def findEvents(interests, time, place):
     random.shuffle(interests)
     interests = [interests[0]]
     for interest in interests:
-        print interest
+        #print interest
         url = url + "q=" + interest.replace(" ", "%20") + "&t=" + time + "&l=" + place + "&app_key=" + app_key
         request = urllib2.urlopen(url)
         result = request.read()
         d = json.loads(result)
-        print d
+        print url
+        #print d
         ret_ev = d['events']['event']
         ct = 0
         for item in ret_ev:
-            print item
+            #print item
             ev = []
             ev.append(item['description'])
             ev.append(item['venue_url'])
